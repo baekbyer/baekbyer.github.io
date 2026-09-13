@@ -86,15 +86,24 @@
   </footer>
 
   <script>
-    // 페이지 로딩 완료 후 실행
     window.addEventListener("DOMContentLoaded", function() {
-      new spine.SpinePlayer("spine-player", {
-        jsonUrl: "c1085.json",
-        atlasUrl: "c1085.atlas",
-        backgroundColor: "#00000000",
-        alpha: true,
-        showControls: true
-      });
+      try {
+        new spine.SpinePlayer("spine-player", {
+          jsonUrl: "./c1085.json",     /* 경로를 ./c1085.json 으로 명시 */
+          atlasUrl: "./c1085.atlas",   /* 경로를 ./c1085.atlas 로 명시 */
+          backgroundColor: "#00000000",
+          alpha: true,
+          showControls: true,
+          success: function(player) {
+            console.log("Spine 로드 성공!");
+          },
+          error: function(player, reason) {
+            console.error("Spine 로드 실패 이유:", reason);
+          }
+        });
+      } catch (err) {
+        console.error("Spine 실행 실패:", err);
+      }
     });
   </script>
 
