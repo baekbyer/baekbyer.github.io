@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Spine Portfolio</title>
+  <!-- 공식 Spine Web Player 불러오기 (v4.1 기준) -->
+  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.1.*/dist/spine-player.css">
+  <script src="https://unpkg.com/@esotericsoftware/spine-player@4.1.*/dist/spine-player.js"></script>
+  <style>
+    body { background-color: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    #player { width: 100%; height: 80vh; }
+  </style>
+</head>
+<body>
+
+  <!-- 플레이어가 들어갈 영역 -->
+  <div id="player"></div>
+
+  <script>
+    new spine.SpinePlayer("player", {
+      skeleton: "c1085.json", // 본인 파일명으로 변경
+      atlas: "c1085.atlas",   // 본인 파일명으로 변경
+      animation: "idle",          // 재생할 기본 애니메이션 이름
+      backgroundColor: "#00000000", // 배경 투명
+      alphapremultiplied: true
+    });
+  </script>
+
+</body>
+</html>
