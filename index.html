@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Spine 3.8 Portfolio</title>
-  <!-- Spine 3.8 전용 Web Player 불러오기 -->
-  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@3.8.99/dist/spine-player.css">
-  <script src="https://unpkg.com/@esotericsoftware/spine-player@3.8.99/dist/spine-player.js"></script>
+  <!-- 공식 Esoteric Software Spine 3.8 CDN -->
+  <link rel="stylesheet" href="https://esotericsoftware.com/files/spine-player/3.8/spine-player.css">
+  <script src="https://esotericsoftware.com/files/spine-player/3.8/spine-player.js"></script>
   <style>
     body { background-color: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
     #player { width: 100%; height: 80vh; }
@@ -17,9 +17,8 @@
 
   <script>
     new spine.SpinePlayer("player", {
-      jsonUrl: "c1085.json", // 3.8 버전은 'skeleton' 대신 'jsonUrl' 사용 (파일명 맞춤)
-      atlasUrl: "c1085.atlas", // 3.8 버전은 'atlas' 대신 'atlasUrl' 사용 (파일명 맞춤)
-      animation: "idle",          // 재생할 애니메이션 이름
+      jsonUrl: "c1085.json", // 본인 파일명과 정확히 대소문자 매칭
+      atlasUrl: "c1085.atlas", // 본인 파일명과 정확히 대소문자 매칭
       backgroundColor: "#00000000",
       alpha: true
     });
