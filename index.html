@@ -2,10 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>limbora's Portfolio</title>
-  <!-- 공식 Spine Web Player 불러오기 (v4.1 기준) -->
-  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@3.8.*/dist/spine-player.css">
-  <script src="https://unpkg.com/@esotericsoftware/spine-player@3.8.*/dist/spine-player.js"></script>
+  <title>Spine 3.8 Portfolio</title>
+  <!-- Spine 3.8 전용 Web Player 불러오기 -->
+  <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@3.8.99/dist/spine-player.css">
+  <script src="https://unpkg.com/@esotericsoftware/spine-player@3.8.99/dist/spine-player.js"></script>
   <style>
     body { background-color: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
     #player { width: 100%; height: 80vh; }
@@ -13,16 +13,15 @@
 </head>
 <body>
 
-  <!-- 플레이어가 들어갈 영역 -->
   <div id="player"></div>
 
   <script>
     new spine.SpinePlayer("player", {
-      skeleton: "https://github.com/baekbyer/baekbyer.github.io/blob/main/c1085.json", // 본인 파일명으로 변경
-      atlas: "https://github.com/baekbyer/baekbyer.github.io/blob/main/c1085.atlas",   // 본인 파일명으로 변경
-      animation: "idle",          // 재생할 기본 애니메이션 이름
-      backgroundColor: "#00000000", // 배경 투명
-      alphapremultiplied: true
+      jsonUrl: "c1085.json", // 3.8 버전은 'skeleton' 대신 'jsonUrl' 사용 (파일명 맞춤)
+      atlasUrl: "c1085.atlas", // 3.8 버전은 'atlas' 대신 'atlasUrl' 사용 (파일명 맞춤)
+      animation: "idle",          // 재생할 애니메이션 이름
+      backgroundColor: "#00000000",
+      alpha: true
     });
   </script>
 
