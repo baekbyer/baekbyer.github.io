@@ -1,38 +1,112 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>Spine Portfolio</title>
-    <!-- UNPKG 공식 CDN으로 교체 -->
-    <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2/dist/spine-player.css">
-    <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2/dist/spine-player.js"></script>
-    <style>
-        body {
-            background-color: #121212;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        #player {
-            width: 100%;
-            height: 80vh;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spine 2D Portfolio</title>
+  
+  <!-- Spine 3.8 전용 Web Player CSS / JS (공식 CDN) -->
+  <link rel="stylesheet" href="https://esotericsoftware.com/files/spine-player/3.8/spine-player.css">
+  <script src="https://esotericsoftware.com/files/spine-player/3.8/spine-player.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0d0f12;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #8a8f9d;
+      font-size: 0.95rem;
+    }
+
+    /* Spine Player 컨테이너 카드 */
+    .player-card {
+      width: 100%;
+      max-width: 900px;
+      height: 600px;
+      background: #161920;
+      border: 1px solid #282c37;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* Spine Player 내부 요소 커스텀 */
+    #spine-player {
+      width: 100%;
+      height: 100%;
+    }
+
+    footer {
+      margin-top: 24px;
+      color: #525866;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
 
-<div id="player"></div>
+  <header>
+    <h1>2D Character Animation</h1>
+    <p>Spine 2D v3.8 Interactive Web Player</p>
+  </header>
 
-<script>
-    new spine.SpinePlayer("player", {
-        skeleton: "https://raw.githubusercontent.com/baekbyer/baekbyer.github.io/main/c1085.json",
-        atlas: "https://raw.githubusercontent.com/baekbyer/baekbyer.github.io/main/c1085.atlas",
-        backgroundColor: "#00000000",
-        alpha: true
+  <!-- Spine 캔버스가 들어가는 위치 -->
+  <div class="player-card">
+    <div id="spine-player"></div>
+  </div>
+
+  <footer>
+    &copy; Portfolio. Powered by Spine Web Player 3.8.
+  </footer>
+
+  <script>
+    // GitHub 저장소 상에 올려둔 Spine 파일명을 입력해주세요. (대소문자 구분 주의)
+    new spine.SpinePlayer("spine-player", {
+      jsonUrl: "c1085.json",   // 업로드한 .json 파일 경로
+      atlasUrl: "c1085.atlas", // 업로드한 .atlas 파일 경로
+      
+      // 설정 옵션
+      backgroundColor: "#00000000", // 플레이어 내부 배경 투명화
+      alpha: true,
+      showControls: true,           // 하단 애니메이션/스킨 재생 컨트롤바 표시 여부 (true/false)
+      
+      // 플레이어 로딩 완료 후 실행할 동작 (선택 사항)
+      success: function (player) {
+        console.log("Spine Web Player 로드 완료!");
+      },
+      error: function (player, reason) {
+        console.error("Spine 로드 실패:", reason);
+      }
     });
-</script>
+  </script>
 
 </body>
 </html>
