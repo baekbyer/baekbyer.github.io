@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprite animation</title>
+  
+  <style>
+    /* Reset & Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #0b0c0e;
+      color: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(11, 12, 14, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+    }
+    .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
+    .back-btn {
+      color: #9ba1b0;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: #ffffff; }
+
+    /* Main Container */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 20px 60px 20px;
+    }
+
+    .gallery-header {
+      margin-bottom: 40px;
+    }
+    .gallery-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
+    .gallery-header p { color: #9ba1b0; font-size: 1.05rem; }
+
+    /* Gallery Grid (작은 이미지들이 모여있는 그리드) */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      background: #14161b;
+      border: 1px solid #232730;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 1 / 1; /* 정사각형 썸네일 유지 */
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      border-color: #3b4252;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* 오버레이 효과 (마우스 올렸을 때 제목 표시) */
+    .item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 12, 14, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .gallery-item:hover .item-overlay {
+      opacity: 1;
+    }
+
+    .item-overlay span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Image Modal (이미지 크게 보기 팝업) */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      color: #525866;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <div class="logo">Sprite animation</div>
+      <a href="index.html" class="back-btn">← Back to Portfolio</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="gallery-header">
+      <h1>Sprite animation</h1>
+      <p>[카카오프렌즈런] 프로젝트 작업물 갤러리입니다.</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item" onclick="openModal('./images/apeach_justice_run.gif')">
+        <img src="./images/apeach_justice_run.gif" alt="Artwork 1" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+1'">
+        <div class="item-overlay"><span>정의의 사도 어피치 달리기</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/apeach_justice_jump2.gif')">
+        <img src="./images/apeach_justice_jump2.gif" alt="Artwork 2" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+2'">
+        <div class="item-overlay"><span>정의의 사도 어피치 점프</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/frodo_butler_run.gif')">
+        <img src="./images/frodo_butler_run.gif" alt="Artwork 3" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+3'">
+        <div class="item-overlay"><span>집사 프로도 달리기</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/frodo_butler_dash.gif')">
+        <img src="./images/frodo_butler_dash.gif" alt="Artwork 4" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+4'">
+        <div class="item-overlay"><span>집사 프로도 대쉬</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/jay_pirate_run.gif')">
+        <img src="./images/jay_pirate_run.gif" alt="Artwork 5" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+5'">
+        <div class="item-overlay"><span>해적 제이지 달리기</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/jay_pirate_jump2.gif')">
+        <img src="./images/jay_pirate_jump2.gif" alt="Artwork 6" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+6'">
+        <div class="item-overlay"><span>해적 제이지 점프</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/muzi_clock_dash.gif')">
+        <img src="./images/muzi_clock_dash.gif" alt="Artwork 7" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+7'">
+        <div class="item-overlay"><span>시계 무지 달리기</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/muzi_clock_jump1.gif')">
+        <img src="./images/muzi_clock_jump1.gif" alt="Artwork 8" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+8'">
+        <div class="item-overlay"><span>시계 무지 대쉬</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/neo_tombraider_dash.gif')">
+        <img src="./images/neo_tombraider_dash.gif" alt="Artwork 9" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+9'">
+        <div class="item-overlay"><span>툼레이더 네오 대쉬</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/neo_tombraider_jump2.gif')">
+        <img src="./images/neo_tombraider_jump2.gif" alt="Artwork 10" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+10'">
+        <div class="item-overlay"><span>툼레이더 네오 점프</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/Map27_enter.gif')">
+        <img src="./images/Map27_enter.gif" alt="Artwork 11" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+11'">
+        <div class="item-overlay"><span>늪지함정 몬스터</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/Map30_idle.gif')">
+        <img src="./images/Map30_idle.gif" alt="Artwork 12" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+12'">
+        <div class="item-overlay"><span>용암함정 몬스터</span></div>
+      </div>
+    </div>
+  </main>
+
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <img id="modalImg" class="modal-content">
+  </div>
+
+  <footer>
+    &copy; 2026 Portfolio. All rights reserved.
+  </footer>
+
+  <script>
+    function openModal(imgSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImg');
+      modal.style.display = 'flex';
+      modalImg.src = imgSrc;
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>

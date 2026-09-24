@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Limbora's 2D gallery</title>
+  
+  <style>
+    /* Reset & Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #0b0c0e;
+      color: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(11, 12, 14, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+    }
+    .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
+    .nav-links a {
+      color: #9ba1b0;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #ffffff; }
+
+    /* Layout Sections */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 100px 20px 60px 20px;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 140px;
+    }
+    .hero h1 { font-size: 3.2rem; line-height: 1.2; margin-bottom: 16px; font-weight: 800; }
+    .hero p { font-size: 1.2rem; color: #9ba1b0; max-width: 600px; }
+
+    /* Video Section Grid (Shorts 세로 비율에 맞게 조절) */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    .video-card {
+      background: #14161b;
+      border: 1px solid #232730;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: #3b4252;
+    }
+
+    /* 썸네일 & 플레이 버튼 레이아웃 */
+    .thumb-link {
+      display: block;
+      text-decoration: none;
+      position: relative;
+    }
+
+    /* 쇼츠 전용 9:16 비율 (가로 일반 영상이면 56.25% 로 수정하시면 됩니다) */
+    .thumb-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 150%; /* 세로형 뷰어 비율 */
+      background: #000;
+      overflow: hidden;
+    }
+
+    .thumb-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .video-card:hover .thumb-container img {
+      transform: scale(1.04);
+    }
+
+    /* 재생 버튼 오버레이 */
+    .play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.65);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.8rem;
+      backdrop-filter: blur(4px);
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .video-card:hover .play-btn {
+      background: rgba(255, 0, 0, 0.85); /* 마우스 올리면 유튜브 레드 색상 */
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .video-info {
+      padding: 20px;
+    }
+
+    .video-info h3 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .video-info p {
+      font-size: 0.9rem;
+      color: #8a8f9d;
+    }
+
+    /* Works Gallery Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: #14161b;
+      border: 1px solid #232730;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+/* 카드 이미지 컨테이너 (영역 고정 및 넘치는 부분 숨김) */
+.card-img-container {
+  width: 100%;
+  height: 220px;
+  background-color: #1e222b;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 썸네일 이미지 스타일 (찌그러짐 방지 & 꽉 채우기) */
+.card-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지가 비율을 유지하며 영역을 꽉 채움 */
+  transition: transform 0.3s ease; /* 마우스 올렸을 때 부드러운 애니메이션 */
+}
+
+/* 카드에 마우스 올렸을 때 이미지가 살짝 확대되는 효과 */
+.card-link:hover .card-thumb {
+  transform: scale(1.05);
+}
+    .card-info { padding: 20px; }
+    .card-info h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .card-info p { font-size: 0.9rem; color: #8a8f9d; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      color: #525866;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+/* Other Works 카드 링크 스타일 */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card-link .card {
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.card-link:hover .card {
+  transform: translateY(-6px);
+  border-color: #3b4252;
+}  
+</style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <div class="logo">PORTFOLIO</div>
+      <div class="nav-links">
+        <a href="#showcase">Video Showcase</a>
+        <a href="#works">Other Works</a>
+        <a href="#about">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>2D Motion &<br>Animation Showcase</h1>
+    <p>임보라의 포트폴리오 페이지입니다.</p>
+  </section>
+
+  <!-- YouTube Video Showcase Section -->
+  <section id="showcase">
+    <h2 class="section-title">Spine2d animation</h2>
+    <div class="video-grid">
+      
+      <!-- 영상 카드 1 -->
+      <div class="video-card">
+        <!-- href 부분에는 영상/쇼츠 주소를 넣고, img src의 영상ID 부위만 본인 유튜브 ID로 고쳐주세요 -->
+        <a href="https://youtube.com/shorts/uweja55xGSk?si=GBB4aK4tr2byNjMU" target="_blank" class="thumb-link">
+          <div class="thumb-container">
+            <img src="https://img.youtube.com/vi/uweja55xGSk/0.jpg" alt="Showcase 1">
+            <div class="play-btn">▶</div>
+          </div>
+        </a>
+        <div class="video-info">
+          <h3>[에픽세븐] 여명의 서곡 루트비히</h3>
+          <p>여명의 서곡 루트비히의 포트레이트 애니메이션입니다. 달빛 배경과 마법진 연출이 포인트입니다.</p>
+        </div>
+      </div>
+
+      <!-- 영상 카드 2 -->
+      <div class="video-card">
+        <a href="https://youtube.com/shorts/cKy9oCqn4bI?si=_3OU74_DrXmxh51b" target="_blank" class="thumb-link">
+          <div class="thumb-container">
+            <img src="https://img.youtube.com/vi/cKy9oCqn4bI/0.jpg" alt="Showcase 2">
+            <div class="play-btn">▶</div>
+          </div>
+        </a>
+        <div class="video-info">
+          <h3>[에픽세븐] 비탄의 로제</h3>
+          <p>비탄의 로제의 포트레이트 애니메이션입니다. 시간을 돌리는 컨셉이라 배경의 건물파편이 재생과 무너짐을 반복하고 있습니다.</p>
+        </div>
+      </div>
+
+      <!-- 영상 카드 3 -->
+      <div class="video-card">
+        <a href="https://youtube.com/shorts/qh0YjhGV2U0?si=cE-mrFhFGbKzp4iW" target="_blank" class="thumb-link">
+          <div class="thumb-container">
+            <img src="https://img.youtube.com/vi/qh0YjhGV2U0/0.jpg" alt="Showcase 3">
+            <div class="play-btn">▶</div>
+          </div>
+        </a>
+        <div class="video-info">
+          <h3>[에픽세븐] 카와주</h3>
+          <p>카와주의 포트레이트 애니메이션입니다. 양손으로 불을 쓰는 컨셉으로 이펙트에 불꽃 느낌을 신경쓰며 작업했습니다.</p>
+        </div>
+      </div>
+<!-- 영상 카드 4 -->
+      <div class="video-card">
+        <!-- href 부분에는 영상/쇼츠 주소를 넣고, img src의 영상ID 부위만 본인 유튜브 ID로 고쳐주세요 -->
+        <a href="https://youtube.com/shorts/sv0sm884K4o?si=eklYPDp7pDeZQvav" target="_blank" class="thumb-link">
+          <div class="thumb-container">
+            <img src="https://img.youtube.com/vi/sv0sm884K4o/0.jpg" alt="Showcase 1">
+            <div class="play-btn">▶</div>
+          </div>
+        </a>
+        <div class="video-info">
+          <h3>[에픽세븐] 여름향기 루루카</h3>
+          <p>여름 특별 스킨 여름향기 루루카 포트레이트 작업입니다. 여름에 맞는 상큼한 이펙트가 포인트입니다.</p>
+        </div>
+      </div>
+
+      <!-- 영상 카드 5 -->
+      <div class="video-card">
+        <a href="https://youtube.com/shorts/Nt2YlC_mFnc?si=h_WfuaoxVr0CSFMn" target="_blank" class="thumb-link">
+          <div class="thumb-container">
+            <img src="https://img.youtube.com/vi/Nt2YlC_mFnc/0.jpg" alt="Showcase 2">
+            <div class="play-btn">▶</div>
+          </div>
+        </a>
+        <div class="video-info">
+          <h3>[에픽세븐] 바니걸 댄서 일리나브</h3>
+          <p>폴 댄서 바니걸 컨셉의 일리나브 포트레이트 작업입니다. 마스코트들인 토끼들과 함께 귀여운 모습을 연출해보았습니다.</p>
+        </div>
+      </div>
+
+      <!-- 영상 카드 6 -->
+      <div class="video-card">
+        <a href="https://youtu.be/iop6Q63ngxE" target="_blank" class="thumb-link">
+          <div class="thumb-container">
+            <img src="https://img.youtube.com/vi/iop6Q63ngxE/0.jpg" alt="Showcase 3">
+            <div class="play-btn">▶</div>
+          </div>
+        </a>
+        <div class="video-info">
+          <h3>[에픽세븐] 레제 스파인 일러스트</h3>
+          <p>레제의 여름기념 일러스트 애니메이션 작업입니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Works Section -->
+<section id="works">
+  <h2 class="section-title">Other Works</h2>
+  <div class="grid">
+
+    <!-- 카드 1 (외부 페이지 링크) -->
+    <a href="art1.html" target="_blank" class="card-link">
+      <div class="card">
+        <div class="card-img-container">
+      <img src="thum_01.png" alt="Artwork Thumbnail" class="card-thumb">
+    </div>
+        <div class="card-info">
+          <h3>Sprite animation</h3>
+          <p>[카카오프렌즈런] 작업물입니다.</p>
+        </div>
+      </div>
+    </a>
+
+    <!-- 카드 2 (외부 페이지 링크) -->
+    <a href="art2.html" target="_blank" class="card-link">
+      <div class="card">
+        <div class="card-img-container">
+      <img src="thum_02.png" alt="Artwork Thumbnail" class="card-thumb">
+    </div>
+        <div class="card-info">
+          <h3>DOT character</h3>
+          <p>회사 및 개인 도트 캐릭터 창작물입니다.</p>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2 class="section-title">About Me</h2>
+    <p style="color: #9ba1b0; max-width: 700px; font-size: 1.05rem; line-height: 1.8;">
+      2017~2026 - 슈퍼크리에이티브<b>[에픽세븐]</b> -재직중<br>2017 - 디브로스<b>[여신의 키스]</b><br>2015~2016 - 이노에이지<b>[카카오프렌즈런]</b><br>2011~2013 - 다담게임<b>[미스틱파이터]</b>
+<br><br>도트 캐릭터 애니메이터로 시작하여 스프라이트 애니메이션, 스파인툴을 활용한 포트레이트 애니메이션 등 다양한 분야의 2D 캐릭터 애니메이션을 작업해왔습니다. 캐릭터 파츠 분리 및 리소스 보충 작업도 스스로 가능합니다. 정규직, 프리랜서 모두 가능합니다.<br>💌<a href="to_jimong@naver.com">to_jimong@naver.com</a><br><br>많은 관심 부탁드립니다.
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2026 Portfolio. All rights reserved.
+  </footer>
+
+</body>
+</html>

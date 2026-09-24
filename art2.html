@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOT animation</title>
+  
+  <style>
+    /* Reset & Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #0b0c0e;
+      color: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(11, 12, 14, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+    }
+    .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
+    .back-btn {
+      color: #9ba1b0;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: #ffffff; }
+
+    /* Main Container */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 20px 60px 20px;
+    }
+
+    .gallery-header {
+      margin-bottom: 40px;
+    }
+    .gallery-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
+    .gallery-header p { color: #9ba1b0; font-size: 1.05rem; }
+
+    /* Gallery Grid (작은 이미지들이 모여있는 그리드) */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      background: #14161b;
+      border: 1px solid #232730;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 1 / 1; /* 정사각형 썸네일 유지 */
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      border-color: #3b4252;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* 오버레이 효과 (마우스 올렸을 때 제목 표시) */
+    .item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 12, 14, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .gallery-item:hover .item-overlay {
+      opacity: 1;
+    }
+
+    .item-overlay span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Image Modal (이미지 크게 보기 팝업) */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 85vh;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      color: #525866;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-container">
+      <div class="logo">DOT gallery</div>
+      <a href="index.html" class="back-btn">← Back to Portfolio</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="gallery-header">
+      <h1>DOT gallery</h1>
+      <p>회사 도트 작업물 및 개인 도트 창작물 갤러리입니다.</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item" onclick="openModal('./images/246246.png')">
+        <img src="./images/246246.png" alt="Artwork 1" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+1'">
+        <div class="item-overlay"><span>[미스틱파이터]몬스터1</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/236236623.png')">
+        <img src="./images/236236623.png" alt="Artwork 2" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+2'">
+        <div class="item-overlay"><span>[미스틱파이터]창작몬스터2</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/man01_idle.gif')">
+        <img src="./images/man01_idle.gif" alt="Artwork 3" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+3'">
+        <div class="item-overlay"><span>중세도끼전사</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/girl01.gif')">
+        <img src="./images/girl01.gif" alt="Artwork 4" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+4'">
+        <div class="item-overlay"><span>금발소녀</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/giltaco1.gif')">
+        <img src="./images/giltaco1.gif" alt="Artwork 5" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+5'">
+        <div class="item-overlay"><span>타코야끼문어</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/catgirl.png')">
+        <img src="./images/catgirl.png" alt="Artwork 6" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+6'">
+        <div class="item-overlay"><span>고양이소녀</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/beargirl00.png')">
+        <img src="./images/beargirl00.png" alt="Artwork 7" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+7'">
+        <div class="item-overlay"><span>곰인형과 소녀</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/mermaid.png')">
+        <img src="./images/mermaid.png" alt="Artwork 8" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+8'">
+        <div class="item-overlay"><span>인어 아가씨</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/redhatcat01.png')">
+        <img src="./images/redhatcat01.png" alt="Artwork 9" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+9'">
+        <div class="item-overlay"><span>빨간모자 고양이 소녀</span></div>
+      </div>
+
+      <div class="gallery-item" onclick="openModal('./images/manoffin.png')">
+        <img src="./images/manoffin.png" alt="Artwork 10" onerror="this.src='https://via.placeholder.com/400x400/1e222b/8a8f9d?text=Artwork+10'">
+        <div class="item-overlay"><span>겨울머핀 세트</span></div>
+      </div>
+    </div>
+  </main>
+
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="modal-close">&times;</span>
+    <img id="modalImg" class="modal-content">
+  </div>
+
+  <footer>
+    &copy; 2026 Portfolio. All rights reserved.
+  </footer>
+
+  <script>
+    function openModal(imgSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImg');
+      modal.style.display = 'flex';
+      modalImg.src = imgSrc;
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
